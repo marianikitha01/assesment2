@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+        integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+        crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/16103cbb15.js" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="/assignment1.css">
+
+    <script>
+
+        var usersArray = [];
+        function init() {
+            document.getElementById("tablerows").innerHTML = "";
+            if (localStorage.usersRecord) {
+                usersArray = JSON.parse(localStorage.usersRecord);
+                for (var i = 0; i < usersArray.length; i++) {
+                    prepareTableCell(i, usersArray[i].name, usersArray[i].phno, usersArray[i].address, usersArray[i].feedback, usersArray[i].comments, usersArray[i].pwd)
+                }
+            }
+        }
+
+        function onSubmit() {
+            var name = document.getElementById("name").value;
+            var phno = document.getElementById("phno").value;
+            var pwd = document.getElementById("pwd").value;
+            var address = document.getElementById("address").value;
+            var feedback = document.getElementById("feedback").value;
+            var comments = document.getElementById("comments").value;
+
+            if (name == "" && phno == "" && pwd == "" && address == "" && feedback == "" && comments == "") {
+
+                document.getElementById("error").innerHTML = "Please fill all the fields";
+                document.getElementById("error").style.color = "red";
+                document.getElementById("name").style.borderColor = "red";
+                document.getElementById("phno").style.borderColor = "red";
+                document.getElementById("pwd").style.borderColor = "red";
+                document.getElementById("address").style.borderColor = "red";
+                document.getElementById("feedback").style.borderColor = "red";
+                document.getElementById("comments").style.borderColor = "red";
+                return false;
+            }
+
+            else {
+                document.getElementById("name").style.borderColor = "lightgrey";
+                document.getElementById("phno").style.borderColor = "lightgrey";
+                document.getElementById("pwd").style.borderColor = "lightgrey";
+                document.getElementById("address").style.borderColor = "lightgrey";
+                document.getElementById("feedback").style.borderColor = "lightgrey";
+                document.getElementById("comments").style.borderColor = "lightgrey";
+            }
+            document.getElementById("error").innerHTML = "";
+
+            var name_correct = /^[A-Za-z\s]+$/;
+
+            if (name.match(name_correct)) {
+                document.getElementById("name").style.borderColor = "lightgrey";
+                true;
+            }
+            else {
+                document.getElementById("message").innerHTML = "Please enter alphabets only";
+                document.getElementById("message").style.color = "red";
+                document.getElementById("name").style.borderColor = "red";
+                return false;
+            }
+
+
+            if (phno.length < 10) {
+                document.getElementById("phnomsg").innerHTML = "Please enter a valid phone number";
+                document.getElementById("phnomsg").style.color = "red";
+                return false;
+            }
+            else {
+                document.getElementById("phnomsg").innerHTML = "";
+            }
+
+
+            if (pwd.length < 8) {
+                document.getElementById("passwordmsg").innerHTML = "Password must contain atleast 8 characters";
+                document.getElementById("passwordmsg").style.color = "red";
+                return false;
+            }
+            else if (pwd.search(/[a-z]/) < 0) {
+
+                document.getElementById("passwordmsg").innerHTML = "Password must contain atleast 1 lower case letter";
+                document.getElementById("passwordmsg").style.color = "red";
+                return false;
+            }
+
+            else if (pwd.search(/[A-Z]/) < 0) {
+                document.getElementById("passwordmsg").innerHTML = "Password must contain atleast 1 upper case letter";
+                document.getElementById("passwordmsg").style.color = "red";
+                return false;
+            }
+            else if (pwd.search(/[0-9]/) < 0) {
+                document.getElementById("passwordmsg").innerHTML = "Password must contain atleast 1 number";
+                document.getElementById("passwordmsg").style.color = "red";
+                return false;
+            }
+            else {
+                document.getElementById("passwordmsg").innerHTML = "";
+
+            }
+
+            if (address.split('.').length <= 1) {
+                document.getElementById("addressmsg").innerHTML = "Please enter atleast one sentence";
+                document.getElementById("addressmsg").style.color = "red";
+                return false;
+            }
+            else {
+                document.getElementById("addressmsg").innerHTML = "";
+
+            }
+
+            if (feedback.split('.').length <= 1) {
+                document.getElementById("feedbackmsg").innerHTML = "Please enter atleast one sentence";
+                document.getElementById("feedbackmsg").style.color = "red";
+                return false;
+            }
+            else {
+                document.getElementById("feedbackmsg").innerHTML = "";
+
+            }
+
+            if (comments.split('.').length <= 1) {
+                document.getElementById("commentsmsg").innerHTML = "Please enter atleast one sentence";
+                document.getElementById("commentsmsg").style.color = "red";
+                return false;
+            }
+            else {
+                document.getElementById("commentsmsg").innerHTML = "";
+
+            }
+
+            document.getElementById("message").innerHTML = "";
+
+            var userObj = { name: name, phno: phno, pwd: pwd, address: address, feedback: feedback, comments: comments }
+
+            if (selectIndex == -1) {
+                usersArray.push(userObj);
+            }
+            else {
+                usersArray.splice(selectIndex, 1, userObj);
+            }
+
+
+            localStorage.usersRecord = JSON.stringify(usersArray);
+            var userText = document.getElementById("address").value;
+
+// Prepare the data to be sent
+var data = {
+    userText: userText
+};
+
+// Create a new XMLHttpRequest object
+var xhr = new XMLHttpRequest();
+
+// Configure the request
+xhr.open("POST", "http://localhost:5000/process_text", true);
+xhr.setRequestHeader("Content-Type", "application/json");
+
+// Define what happens on successful data submission
+xhr.onload = function () {
+    if (xhr.status === 200) {
+        var responseData = JSON.parse(xhr.responseText);
+        console.log("Processed data:", responseData.processed_data);
+        // Perform actions with the processed data as needed
+    }
+};
+
+// Define what happens in case of an error
+xhr.onerror = function () {
+    console.error("Request failed");
+    // Handle error appropriately
+};
+
+// Send the request with the data
+xhr.send(JSON.stringify(data));
+            init();
+            onClear();
+
+        }
+
+
+        function prepareTableCell(index, name, phno, address, feedback, comments) {
+            var table = document.getElementById("tablerows");
+            var row = table.insertRow();
+            var nameCell = row.insertCell(0);
+            var phnoCell = row.insertCell(1);
+            var addressCell = row.insertCell(2);
+            var feedbackCell = row.insertCell(3);
+            var commentsCell = row.insertCell(4);
+            var actionCell = row.insertCell(5);
+
+            nameCell.innerHTML = name;
+            phnoCell.innerHTML = phno;
+            addressCell.innerHTML = address;
+            feedbackCell.innerHTML = feedback;
+            commentsCell.innerHTML = comments;
+            actionCell.innerHTML = '<i id="btnEdit" class="fa-solid fa-pen" onclick="onEdit(' + index + ')"></i></br> <i id="btnDelete" class="fa-solid fa-trash" onclick="deletedata(' + index + ')"></i>';
+        }
+
+        function onClear() {
+            selectIndex = -1;
+            document.getElementById("name").value = "";
+            document.getElementById("phno").value = "";
+            document.getElementById("pwd").value = "";
+            document.getElementById("address").value = "";
+            document.getElementById("feedback").value = "";
+            document.getElementById("comments").value = "";
+        }
+
+        var selectIndex = -1;
+        function onEdit(index) {
+            selectIndex = index;
+            var userObj = usersArray[index];
+            document.getElementById("name").value = userObj.name;
+            document.getElementById("phno").value = userObj.phno;
+            document.getElementById("pwd").value = userObj.pwd;
+            document.getElementById("address").value = userObj.address;
+            document.getElementById("feedback").value = userObj.feedback;
+            document.getElementById("comments").value = userObj.comments;
+        }
+
+        function deletedata(index) {
+            usersArray.splice(index, 1);
+            localStorage.usersRecord = JSON.stringify(usersArray);
+            init();
+        }
+
+    </script>
+</head>
+
+<body onload="init()" class="h-100 h-custom gradient-custom-2">
+
+    <div class="container py-5 h-100">
+        <div class="row justify-content-center align-items-center h-100">
+            <div class="col-12 col-lg-9 col-xl-7">
+                <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+                    <div class="card-body p-4 p-md-5">
+                        <h2 class="mb-4">Feedbaghjhck Form</h2>
+
+                        <form>
+                            <div class="form-group">
+                                <label for="name">Name:</label>
+                                <input type="text" class="form-control" id="name">
+                                <span id="message"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phno">Phone Number:</label>
+                                <input type="text" class="form-control" id="phno" maxlength="10">
+                                <span id="phnomsg"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="pwd">Password:</label>
+                                <input type="password" class="form-control" id="pwd">
+                                <span id="passwordmsg"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="address">Address:</label>
+                                <textarea class="form-control" id="address"></textarea>
+                                <span id="addressmsg"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="feedback">Feedback:</label>
+                                <textarea class="form-control" id="feedback"></textarea>
+                                <span id="feedbackmsg"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="comments">Additional Comments:</label>
+                                <textarea class="form-control" id="comments"></textarea>
+                                <span id="commentsmsg"></span>
+                            </div>
+
+                            <div id="error"></div>
+
+                            <button type="button" class="btn btn-primary" onclick="onSubmit()">Submit</button>
+                            <button type="button" class="btn btn-secondary" onclick="onClear()">Clear</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="mb-4">User Records</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Phone Number</th>
+                    <th>Address</th>
+                    <th>Feedback</th>
+                    <th>Additional Comments</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="tablerows"></tbody>
+        </table>
+    </div>
+    </div>
+</body>
+
+</html>

@@ -5,7 +5,7 @@ import stanza
 
 try:
     # Initialize CoreNLP
-    nlp = stanza.Pipeline()  # This will use the default CoreNLP settings (localhost:9000)
+    nlp = stanza.Pipeline()
 except Exception as e:
     print(f"Error initializing Stanza: {str(e)}")
 

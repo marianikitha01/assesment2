@@ -18,7 +18,7 @@ Address field from the form is used for processing.
 **This is a screenshot showcasing the form filled with details.**
 
 ![processed_text](https://github.com/marianikitha01/assesment2/blob/main/images/processed_text.png)
-**This is a screenshot showcasing the form details in Network possted using POST menthod**
+**This is a screenshot showcasing the form details in Network possted using POST method**
 
-![processed_data](https://github.com/marianikitha01/assesment2/blob/main/images/processed_text.png)
+![processed_data](https://github.com/marianikitha01/assesment2/blob/main/images/processed_data.png)
 **This is a screenshot showcasing the processed data in the console.**

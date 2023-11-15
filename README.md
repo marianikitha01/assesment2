@@ -22,3 +22,6 @@ Address field from the form is used for processing.
 
 ![processed_data](https://github.com/marianikitha01/assesment2/blob/main/images/processed_data.png)
 **This is a screenshot showcasing the processed data in the console.**
+
+![payload](https://github.com/marianikitha01/assesment2/blob/main/images/payload.png)
+**This is a screenshot showcasing the payload with user_text which is nothing but address**
